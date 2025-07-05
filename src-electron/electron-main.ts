@@ -1,8 +1,8 @@
 import { app, BrowserWindow, ipcMain } from 'electron';
 import path from 'path';
 import os from 'os';
-import { fileURLToPath } from 'url'
-import screenshot from 'screenshot-desktop'
+import { fileURLToPath } from 'url';
+import screenshot from 'screenshot-desktop';
 
 // needed in case process is undefined under Linux
 const platform = process.platform || os.platform();
@@ -17,7 +17,7 @@ async function createWindow() {
    */
   mainWindow = new BrowserWindow({
     icon: path.resolve(currentDir, 'icons/icon.png'), // tray icon
-    width: 1000,
+    width: 400,
     height: 600,
     useContentSize: true,
     webPreferences: {
@@ -25,7 +25,10 @@ async function createWindow() {
       // More info: https://v2.quasar.dev/quasar-cli-vite/developing-electron-apps/electron-preload-script
       preload: path.resolve(
         currentDir,
-        path.join(process.env.QUASAR_ELECTRON_PRELOAD_FOLDER, 'electron-preload' + process.env.QUASAR_ELECTRON_PRELOAD_EXTENSION)
+        path.join(
+          process.env.QUASAR_ELECTRON_PRELOAD_FOLDER,
+          'electron-preload' + process.env.QUASAR_ELECTRON_PRELOAD_EXTENSION,
+        ),
       ),
     },
   });
@@ -52,13 +55,13 @@ async function createWindow() {
 }
 
 void app.whenReady().then(() => {
-  void createWindow()
+  void createWindow();
 
   ipcMain.handle('take-screenshot', async () => {
-    const imgPath = path.join(app.getPath('pictures'), `screenshot-${Date.now()}.jpg`)
-    await screenshot({ filename: imgPath })
-    return imgPath
-  })
+    const imgPath = path.join(app.getPath('pictures'), `screenshot-${Date.now()}.jpg`);
+    await screenshot({ filename: imgPath });
+    return imgPath;
+  });
 });
 
 app.on('window-all-closed', () => {
