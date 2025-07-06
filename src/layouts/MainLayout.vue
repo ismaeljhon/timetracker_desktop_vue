@@ -11,10 +11,7 @@
           @click="toggleLeftDrawer"
           v-show="false"
         />
-        <q-toolbar-title class="text-subtitle1"
-          ><q-icon name="timer" size="sm" class="q-mr-sm" /> Bickert Management
-          Timetracker</q-toolbar-title
-        >
+        <q-toolbar-title class="text-subtitle1">Bickert Management Timetracker</q-toolbar-title>
       </q-toolbar>
     </q-header>
 
