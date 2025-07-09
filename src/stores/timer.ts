@@ -1,4 +1,5 @@
 import { defineStore, acceptHMRUpdate } from 'pinia';
+import { pad } from 'src/shared/utils';
 
 export const useTimerStore = defineStore('timer', {
   state: () => ({
@@ -9,6 +10,12 @@ export const useTimerStore = defineStore('timer', {
 
   getters: {
     isTimerRunning: (state) => state.timerRunning,
+    formattedTime: (state) => {
+      const hours = Math.floor(state.totalSeconds / 3600);
+      const minutes = Math.floor((state.totalSeconds % 3600) / 60);
+      const seconds = state.totalSeconds % 60;
+      return `${pad(hours)}:${pad(minutes)}:${pad(seconds)}`;
+    },
   },
 
   actions: {

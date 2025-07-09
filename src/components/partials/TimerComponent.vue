@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { pad } from 'src/shared/utils';
 import { useTimerStore } from 'src/stores/timer';
 import { computed } from 'vue';
 
@@ -11,16 +10,9 @@ const processTimer = () => {
     return;
   }
 
-  console.log(formattedTime.value);
+  console.log(timerStore.formattedTime);
   timerStore.stopTimer();
 };
-
-const formattedTime = computed(() => {
-  const hours = Math.floor(timerStore.totalSeconds / 3600);
-  const minutes = Math.floor((timerStore.totalSeconds % 3600) / 60);
-  const seconds = timerStore.totalSeconds % 60;
-  return `${pad(hours)}:${pad(minutes)}:${pad(seconds)}`;
-});
 
 const timerButtonLabel = computed(() => (timerStore.isTimerRunning ? 'Stop' : 'Start'));
 const timerButtonIcon = computed(() => (timerStore.isTimerRunning ? 'stop' : 'play_arrow'));
@@ -30,7 +22,7 @@ const timerButtonIcon = computed(() => (timerStore.isTimerRunning ? 'stop' : 'pl
     <q-item-section>
       <q-item-label>&nbsp;</q-item-label>
       <q-item-label caption lines="2">
-        <p class="text-h3 text-grey-9">{{ formattedTime }}</p>
+        <p class="text-h3 text-grey-9">{{ timerStore.formattedTime }}</p>
       </q-item-label>
     </q-item-section>
 
