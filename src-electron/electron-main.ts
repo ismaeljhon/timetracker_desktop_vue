@@ -1,8 +1,8 @@
-import { app, BrowserWindow, ipcMain } from 'electron';
+import { app, BrowserWindow } from 'electron';
 import path from 'path';
 import os from 'os';
 import { fileURLToPath } from 'url';
-import screenshot from 'screenshot-desktop';
+import { loadIpcHandlers } from './ipc-handler';
 
 // needed in case process is undefined under Linux
 const platform = process.platform || os.platform();
@@ -22,6 +22,7 @@ async function createWindow() {
     useContentSize: true,
     webPreferences: {
       contextIsolation: true,
+      nodeIntegration: false,
       // More info: https://v2.quasar.dev/quasar-cli-vite/developing-electron-apps/electron-preload-script
       preload: path.resolve(
         currentDir,
@@ -57,11 +58,7 @@ async function createWindow() {
 void app.whenReady().then(() => {
   void createWindow();
 
-  ipcMain.handle('take-screenshot', async () => {
-    const imgPath = path.join(app.getPath('pictures'), `screenshot-${Date.now()}.jpg`);
-    await screenshot({ filename: imgPath });
-    return imgPath;
-  });
+  loadIpcHandlers();
 });
 
 app.on('window-all-closed', () => {

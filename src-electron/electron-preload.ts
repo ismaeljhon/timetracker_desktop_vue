@@ -28,8 +28,18 @@
  * }
  */
 
-import { contextBridge, ipcRenderer } from 'electron'
+import { contextBridge, ipcRenderer } from 'electron';
+import type { Project, ProjectTask } from 'src/types/zoho-rest.type';
 
 contextBridge.exposeInMainWorld('electronAPI', {
-  takeScreenshot: (): Promise<string> => ipcRenderer.invoke('take-screenshot')
-})
+  takeScreenshot: (): Promise<string> => ipcRenderer.invoke('take-screenshot'),
+  getProjects: (): Promise<Project[]> => ipcRenderer.invoke('get-projects'),
+  getProjectTasks: (projectId: string | number): Promise<ProjectTask[]> =>
+    ipcRenderer.invoke('get-tasks-by-project', { projectId }),
+});
+
+contextBridge.exposeInMainWorld('authApi', {
+  saveToken: (token: string) => ipcRenderer.invoke('auth:save-token', token),
+  getToken: (): Promise<string | undefined> => ipcRenderer.invoke('auth:get-token'),
+  clearToken: () => ipcRenderer.invoke('auth:clear-token'),
+});

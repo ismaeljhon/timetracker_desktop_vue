@@ -17,8 +17,10 @@
   "dependencies": {
     "@mdi/font": "^7.4.47",
     "@quasar/extras": "^1.16.4",
+    "@types/electron-store": "^3.2.2",
     "@types/screenshot-desktop": "^1.12.3",
     "axios": "^1.2.1",
+    "electron-store": "^10.1.0",
     "pinia": "^3.0.1",
     "quasar": "^2.16.0",
     "screenshot-desktop": "^1.15.1",
