@@ -6,6 +6,7 @@ declare global {
   interface Window {
     electronAPI: {
       takeScreenshot: () => Promise<string>;
+      getLatestScreenshot: () => Promise<string>;
       getProjects: () => Promise<Project[]>;
       getProjectTasks: (projectId: string | number) => Promise<ProjectTask[]>;
     };

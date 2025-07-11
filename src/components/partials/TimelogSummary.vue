@@ -1,8 +1,10 @@
-<script lang="ts" setup></script>
+<script lang="ts" setup>
+import LatestScreenshot from './LatestScreenshot.vue';
+</script>
 <template>
   <q-card class="my-card" flat bordered>
     <q-card-section horizontal>
-      <q-img class="col-7" src="https://cdn.quasar.dev/img/parallax2.jpg" />
+      <LatestScreenshot />
       <q-card-section>
         <q-item>
           <q-item-section>

@@ -1,3 +1,9 @@
+<script setup lang="ts">
+import { useScreenshotStore } from 'src/stores/screenshot';
+
+const screenshot = useScreenshotStore();
+</script>
+
 <template>
   <q-layout view="lHh Lpr lFf">
     <q-header>
@@ -5,7 +11,7 @@
         <q-toolbar-title class="text-subtitle1">Bickert Management Timetracker</q-toolbar-title>
         <q-btn-dropdown stretch flat dropdown-icon="settings">
           <q-list>
-            <q-item clickable v-close-popup tabindex="0">
+            <q-item clickable v-close-popup tabindex="0" @click="screenshot.takeScreenshot()">
               <q-item-section avatar>
                 <q-avatar icon="screenshot_monitor" square text-color="grey-7" size="40px" />
               </q-item-section>
@@ -41,5 +47,3 @@
     </q-page-container>
   </q-layout>
 </template>
-
-<script setup lang="ts"></script>

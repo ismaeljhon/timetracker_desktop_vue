@@ -6,8 +6,6 @@ export default class ZohoPortalRestApiService extends RestApiService {
     const portalId = '';
     const accessToken = '';
 
-    console.log(prefix);
-
     super({
       baseURL: `https://projectsapi.zoho.com/restapi/portal/${portalId}${prefix}`,
       headers: {

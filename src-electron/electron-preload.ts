@@ -33,6 +33,7 @@ import type { Project, ProjectTask } from 'src/types/zoho-rest.type';
 
 contextBridge.exposeInMainWorld('electronAPI', {
   takeScreenshot: (): Promise<string> => ipcRenderer.invoke('take-screenshot'),
+  getLatestScreenshot: (): Promise<string> => ipcRenderer.invoke('get-latest-screenshot'),
   getProjects: (): Promise<Project[]> => ipcRenderer.invoke('get-projects'),
   getProjectTasks: (projectId: string | number): Promise<ProjectTask[]> =>
     ipcRenderer.invoke('get-tasks-by-project', { projectId }),
