@@ -1,19 +1,28 @@
 import { app, ipcMain } from 'electron';
+import { date, format } from 'quasar';
 import fs from 'fs';
 import screenshot from 'screenshot-desktop';
 import path from 'path';
 import Store from 'electron-store';
 // import ZohoProjectsService from './services/ZohoProjectsService';
 import ZohoProjectTasksService from './services/ZohoProjectTasksService';
+import ZohoCatalystFilesService from './services/ZohoCatalystFilesService';
 
 export const loadIpcHandlers = () => {
   const store = new Store<{ latestScreenshot: string }>();
 
   ipcMain.handle('take-screenshot', async () => {
-    const imgPath = path.join(app.getPath('pictures'), `screenshot-${Date.now()}.jpg`);
-    await screenshot({ filename: imgPath });
+    const { capitalize } = format;
+    const ownerName = 'demo user';
+    const timeStamp = Date.now();
+    const screenshotFile = `${capitalize(ownerName).replaceAll(' ', '-')}-${date.formatDate(timeStamp, 'DDMMYYYY-hhmmss')}.jpg`;
+    const imgPath = path.join(app.getPath('pictures'), screenshotFile);
 
+    await screenshot({ filename: imgPath });
     store.set('latestScreenshot', imgPath);
+
+    await new ZohoCatalystFilesService().uploadScreenshot();
+
     return imgPath;
   });
 

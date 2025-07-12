@@ -3,7 +3,6 @@ import { useScreenshotStore } from 'src/stores/screenshot';
 import { onMounted } from 'vue';
 
 const screenshot = useScreenshotStore();
-// screenshot.latestScreenshot
 
 onMounted(() => {
   screenshot.fetchLatestScreenshot().catch((e) => console.error(e));

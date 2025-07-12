@@ -1,11 +1,15 @@
 import { defineStore, acceptHMRUpdate } from 'pinia';
-import { pad } from 'src/shared/utils';
+import { format } from 'quasar';
+import { useScreenshotStore } from './screenshot';
+
+const { pad } = format;
 
 export const useTimerStore = defineStore('timer', {
   state: () => ({
     timerRunning: false,
     totalSeconds: 0,
     timerId: 0,
+    screenshotInterval: 0,
   }),
 
   getters: {
@@ -14,7 +18,7 @@ export const useTimerStore = defineStore('timer', {
       const hours = Math.floor(state.totalSeconds / 3600);
       const minutes = Math.floor((state.totalSeconds % 3600) / 60);
       const seconds = state.totalSeconds % 60;
-      return `${pad(hours)}:${pad(minutes)}:${pad(seconds)}`;
+      return `${pad(hours.toString())}:${pad(minutes.toString())}:${pad(seconds.toString())}`;
     },
   },
 
@@ -22,14 +26,21 @@ export const useTimerStore = defineStore('timer', {
     startTimer() {
       if (this.timerRunning) return;
 
+      const screenshot = useScreenshotStore();
+
       this.timerRunning = true;
       this.timerId = window.setInterval(() => {
         this.totalSeconds++;
       }, 1000);
+
+      this.screenshotInterval = window.setInterval(() => {
+        screenshot.takeScreenshot().catch((e) => console.log(e));
+      }, 3000);
     },
     stopTimer() {
       if (this.timerId !== null) {
         clearInterval(this.timerId);
+        clearInterval(this.screenshotInterval);
         this.timerId = 0;
         this.timerRunning = false;
         this.totalSeconds = 0;
