@@ -7,8 +7,13 @@ import Store from 'electron-store';
 // import ZohoProjectsService from './services/ZohoProjectsService';
 import ZohoProjectTasksService from './services/ZohoProjectTasksService';
 import ZohoCatalystFilesService from './services/ZohoCatalystFilesService';
+// import ZohoAuthenticationService from './services/ZohoAuthenticationService';
+import AuthKeyStorageService from './services/AuthKeyStorageService';
 
 export const loadIpcHandlers = () => {
+  // load Authentication keys from HomePath here
+  AuthKeyStorageService.setAuthKeys();
+
   const store = new Store<{ latestScreenshot: string }>();
 
   ipcMain.handle('take-screenshot', async () => {

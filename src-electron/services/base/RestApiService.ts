@@ -7,7 +7,7 @@ interface ApiServiceInstanceParams {
   url?: string;
 }
 
-export default abstract class RestApiService {
+export default class RestApiService {
   private axiosInstance: AxiosInstance;
   constructor(apiServiceInstanceParams: ApiServiceInstanceParams) {
     this.axiosInstance = axios.create(apiServiceInstanceParams);
