@@ -9,12 +9,17 @@ import ZohoProjectTasksService from './services/ZohoProjectTasksService';
 import ZohoCatalystFilesService from './services/ZohoCatalystFilesService';
 // import ZohoAuthenticationService from './services/ZohoAuthenticationService';
 import AuthKeyStorageService from './services/AuthKeyStorageService';
+import type { CurrentUser } from './types/auth.type';
 
 export const loadIpcHandlers = () => {
   // load Authentication keys from HomePath here
   AuthKeyStorageService.setAuthKeys();
 
-  const store = new Store<{ latestScreenshot: string }>();
+  const store = new Store<{ latestScreenshot: string; currentUser: CurrentUser }>();
+
+  ipcMain.handle('get-current-user', () => {
+    return store.get('currentUser');
+  });
 
   ipcMain.handle('take-screenshot', async () => {
     const { capitalize } = format;

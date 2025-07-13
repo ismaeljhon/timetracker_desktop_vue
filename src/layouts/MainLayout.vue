@@ -19,15 +19,14 @@ const screenshot = useScreenshotStore();
                 <q-item-label>Take screenshot</q-item-label>
               </q-item-section>
             </q-item>
-            <!-- <q-separator /> -->
-            <q-item clickable v-close-popup tabindex="1">
+            <!-- <q-item clickable v-close-popup tabindex="1">
               <q-item-section avatar>
                 <q-avatar icon="lock" square text-color="grey-7" size="40px" />
               </q-item-section>
               <q-item-section>
                 <q-item-label>Access keys</q-item-label>
               </q-item-section>
-            </q-item>
+            </q-item> -->
             <q-separator spaced />
             <q-item clickable v-close-popup tabindex="2">
               <q-item-section avatar>
