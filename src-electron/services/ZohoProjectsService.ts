@@ -1,12 +1,15 @@
 import type { Project } from 'src/types/zoho-rest.type';
-import ZohoPortals from './base/ZohoPortalsService';
+import ZohoPortalService from './base/ZohoPortalsService';
 
-export default class ZohoProjectsService extends ZohoPortals {
+export default class ZohoProjectsService extends ZohoPortalService {
   constructor() {
-    super('/projects/');
+    super();
   }
 
   async getList(): Promise<Project[]> {
-    return super.request().then((res) => res.data.projects);
+    return super
+      .getInstance()
+      .get('/projects/')
+      .then((res) => res.data.projects);
   }
 }

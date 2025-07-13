@@ -2,15 +2,16 @@ import type { ProjectTask } from 'src/types/zoho-rest.type';
 import ZohoPortalRestApiService from './base/ZohoPortalsService';
 
 export default class ZohoProjectTasksService extends ZohoPortalRestApiService {
+  private projectId: string | number;
   constructor(projectId: string | number) {
-    super(`/projects/${projectId}/tasks`);
+    super();
+    this.projectId = projectId;
   }
 
   async getList(): Promise<ProjectTask[]> {
     return super
-      .request({
-        url: '/',
-      })
+      .getInstance()
+      .get(`/projects/${this.projectId}/tasks/`)
       .then((res) => res.data.tasks);
   }
 }

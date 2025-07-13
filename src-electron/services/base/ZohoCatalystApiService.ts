@@ -1,20 +1,9 @@
-import type { AxiosRequestConfig, AxiosResponse } from 'axios';
-import RestApiService from './RestApiService';
+import ZohoRestApiService from './ZohoRestApiService';
 
-export default class ZohoCatalystApiService extends RestApiService {
+export default class ZohoCatalystApiService extends ZohoRestApiService {
   constructor(prefix: string = '/') {
     const projectId = '';
-    const accessToken = '';
 
-    super({
-      baseURL: `https://api.catalyst.zoho.com/baas/v1/project/${projectId}${prefix}`,
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-      },
-    });
-  }
-
-  override async request(axiosRequestProps?: AxiosRequestConfig): Promise<AxiosResponse> {
-    return super.request({ ...axiosRequestProps }).then((res) => res);
+    super(`https://api.catalyst.zoho.com/baas/v1/project/${projectId}${prefix}`);
   }
 }

@@ -32,6 +32,9 @@ const AuthKeyStorageService = {
       refresh_token,
     };
   },
+  clearAccessToken(): void {
+    store.set('access_token', '');
+  },
   getAccessToken(): string | undefined {
     return store.get('access_token');
   },

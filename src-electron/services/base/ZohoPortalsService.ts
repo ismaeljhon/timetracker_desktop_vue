@@ -1,20 +1,8 @@
-import type { AxiosRequestConfig, AxiosResponse } from 'axios';
-import RestApiService from './RestApiService';
+import ZohoRestApiService from './ZohoRestApiService';
 
-export default class ZohoPortalRestApiService extends RestApiService {
-  constructor(prefix: string = '/') {
+export default class ZohoPortalService extends ZohoRestApiService {
+  constructor(prefix: string = '') {
     const portalId = '';
-    const accessToken = '';
-
-    super({
-      baseURL: `https://projectsapi.zoho.com/restapi/portal/${portalId}${prefix}`,
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-      },
-    });
-  }
-
-  override async request(axiosRequestProps?: AxiosRequestConfig): Promise<AxiosResponse> {
-    return super.request({ ...axiosRequestProps }).then((res) => res);
+    super(`https://projectsapi.zoho.com/restapi/portal/${portalId}${prefix}`);
   }
 }

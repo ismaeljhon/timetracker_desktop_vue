@@ -4,12 +4,14 @@ import fs from 'fs';
 import screenshot from 'screenshot-desktop';
 import path from 'path';
 import Store from 'electron-store';
-// import ZohoProjectsService from './services/ZohoProjectsService';
+import ZohoProjectsService from './services/ZohoProjectsService';
 import ZohoProjectTasksService from './services/ZohoProjectTasksService';
 import ZohoCatalystFilesService from './services/ZohoCatalystFilesService';
-// import ZohoAuthenticationService from './services/ZohoAuthenticationService';
 import AuthKeyStorageService from './services/AuthKeyStorageService';
 import type { CurrentUser } from './types/auth.type';
+
+import { config } from 'dotenv';
+config();
 
 export const loadIpcHandlers = () => {
   // load Authentication keys from HomePath here
@@ -43,8 +45,7 @@ export const loadIpcHandlers = () => {
   });
 
   ipcMain.handle('get-projects', () => {
-    return [];
-    // return new ZohoProjectsService().getList();
+    return new ZohoProjectsService().getList();
   });
 
   ipcMain.handle('get-tasks-by-project', (event, args: { projectId: number | string }) => {
