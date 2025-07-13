@@ -39,8 +39,6 @@ export default class {
             return this.axiosInstance(originalRequest);
           } catch (err) {
             // Optional: clear tokens and handle logout
-            // store.delete('access_token');
-
             return Promise.reject(new Error('Err: ', err || ''));
           }
         }
