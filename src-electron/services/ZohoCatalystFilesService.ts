@@ -10,7 +10,7 @@ export default class ZohoCatalystFilesService extends ZohoCatalystApiService {
   }
 
   async uploadScreenshot() {
-    const folderId = '17014000000021066';
+    const folderId = process.env.ZOHO_CATALYST_ROOT_FOLDER_ID;
     const store = new Store<{ latestScreenshot: string }>();
     const filePath = store.get('latestScreenshot');
     const fileStream = fs.createReadStream(filePath);
