@@ -29,7 +29,7 @@
  */
 
 import { contextBridge, ipcRenderer } from 'electron';
-import type { Project, ProjectTask } from 'src/types/zoho-rest.type';
+import type { Project, ProjectTask, ZohoTimesheet } from 'src/types/zoho-rest.type';
 
 contextBridge.exposeInMainWorld('electronAPI', {
   takeScreenshot: (): Promise<string> => ipcRenderer.invoke('take-screenshot'),
@@ -37,6 +37,7 @@ contextBridge.exposeInMainWorld('electronAPI', {
   getProjects: (): Promise<Project[]> => ipcRenderer.invoke('get-projects'),
   getProjectTasks: (projectId: string | number): Promise<ProjectTask[]> =>
     ipcRenderer.invoke('get-tasks-by-project', { projectId }),
+  getWeeklyTimesheets: (): Promise<ZohoTimesheet> => ipcRenderer.invoke('get-weekly-timesheet'),
 });
 
 contextBridge.exposeInMainWorld('authApi', {

@@ -11,6 +11,7 @@ import AuthKeyStorageService from './services/AuthKeyStorageService';
 import type { CurrentUser } from './types/auth.type';
 
 import { config } from 'dotenv';
+import ZohoTimesheetsService from './services/ZohoTimesheetsService';
 config();
 
 export const loadIpcHandlers = () => {
@@ -50,5 +51,9 @@ export const loadIpcHandlers = () => {
 
   ipcMain.handle('get-tasks-by-project', (event, args: { projectId: number | string }) => {
     return new ZohoProjectTasksService(args.projectId).getList();
+  });
+
+  ipcMain.handle('get-weekly-timesheet', () => {
+    return new ZohoTimesheetsService().getWeeklyTimesheet();
   });
 };

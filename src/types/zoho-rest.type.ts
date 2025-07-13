@@ -16,3 +16,11 @@ type ProjectTaskStatus = {
 export type ProjectTask = Omit<Project, 'status'> & {
   status: ProjectTaskStatus;
 };
+
+export type ZohoTimesheet = {
+  date: [];
+  role: string;
+  non_billable_hours: string;
+  billable_hours: string;
+  grandtotal: string;
+};
