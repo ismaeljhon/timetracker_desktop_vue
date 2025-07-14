@@ -10,7 +10,10 @@ declare global {
       getLatestScreenshot: () => Promise<string>;
       getProjects: () => Promise<Project[]>;
       getProjectTasks: (projectId: string | number) => Promise<ProjectTask[]>;
-      getWeeklyTimesheets: () => Promise<ZohoTimesheet>;
+      getTimelogSummary: () => Promise<{
+        weeklyTimesheet: ZohoTimesheet;
+        dailyTimesheet: ZohoTimesheet;
+      }>;
     };
     authApi: {
       getCurrentUser: () => Promise<CurrentUser>;

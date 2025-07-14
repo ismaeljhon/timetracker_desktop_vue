@@ -3,11 +3,15 @@ import { computed, onMounted, ref } from 'vue';
 import LatestScreenshot from './LatestScreenshot.vue';
 import type { ZohoTimesheet } from 'src/types/zoho-rest.type';
 
-const weeklyTimesheet = ref<ZohoTimesheet>();
+const timelogSummary = ref<{
+  weeklyTimesheet: ZohoTimesheet;
+  dailyTimesheet: ZohoTimesheet;
+}>();
 
-const weeklyHours = computed(() => weeklyTimesheet.value?.grandtotal);
+const weeklyHours = computed(() => timelogSummary.value?.weeklyTimesheet?.grandtotal || '00:00');
+const dailyHours = computed(() => timelogSummary.value?.dailyTimesheet?.grandtotal || '00:00');
 onMounted(async () => {
-  weeklyTimesheet.value = await window.electronAPI.getWeeklyTimesheets();
+  timelogSummary.value = await window.electronAPI.getTimelogSummary();
 });
 </script>
 <template>
@@ -18,7 +22,9 @@ onMounted(async () => {
         <q-item>
           <q-item-section>
             <q-item-label caption class="text-grey-8">Today</q-item-label>
-            <q-item-label lines="2" class="text-h5 text-weight-regular">08:00</q-item-label>
+            <q-item-label lines="2" class="text-h5 text-weight-regular">{{
+              dailyHours
+            }}</q-item-label>
           </q-item-section>
         </q-item>
         <q-item>

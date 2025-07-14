@@ -1,8 +1,10 @@
 <script setup lang="ts">
 import { useTimerStore } from 'src/stores/timer';
+import { useTimetrackerStore } from 'src/stores/timetracker';
 import { computed } from 'vue';
 
 const timerStore = useTimerStore();
+const timertrackerStore = useTimetrackerStore();
 
 const processTimer = () => {
   if (!timerStore.isTimerRunning) {
@@ -16,6 +18,9 @@ const processTimer = () => {
 
 const timerButtonLabel = computed(() => (timerStore.isTimerRunning ? 'Stop' : 'Start'));
 const timerButtonIcon = computed(() => (timerStore.isTimerRunning ? 'stop' : 'play_arrow'));
+const disableTimer = computed(() => {
+  return !timertrackerStore.projectSelectedId || !timertrackerStore.projectTaskSelectedId;
+});
 </script>
 <template>
   <q-item class="time-component q-pa-none q-pl-md">
@@ -35,6 +40,7 @@ const timerButtonIcon = computed(() => (timerStore.isTimerRunning ? 'stop' : 'pl
           :class="{
             'lighter-button': timerStore.isTimerRunning,
           }"
+          :disabled="disableTimer"
           @click="processTimer"
       /></q-item-label>
     </q-item-section>

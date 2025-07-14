@@ -1,9 +1,11 @@
 <script setup lang="ts">
 import type { QSelect, QSelectProps } from 'quasar';
+import { useTimetrackerStore } from 'src/stores/timetracker';
 import type { Project, ProjectTask } from 'src/types/zoho-rest.type';
 import type { Ref } from 'vue';
 import { computed, onMounted, ref, unref } from 'vue';
 
+const timertrackerStore = useTimetrackerStore();
 const projectSelectedId = ref<number | string>();
 const projectTaskSelectedId = ref<number | string>();
 const notes = ref('');
@@ -68,6 +70,18 @@ async function fetchProjects() {
   isLoadingProjects.value = false;
 }
 
+function updateProjectModel(projectId: Ref) {
+  // clear tasks
+  projectTaskSelectedId.value = '';
+  timertrackerStore.setProjectSelected(projectId?.value);
+
+  fetchProjectTasks(projectId).catch(() => console.error('Error on fetching project task'));
+}
+
+function updateProjectTaskModel(projectTaskId: Ref) {
+  timertrackerStore.setProjectTaskSelected(projectTaskId?.value);
+}
+
 async function fetchProjectTasks(projectId: Ref) {
   if (!projectId) {
     return;
@@ -115,7 +129,7 @@ onMounted(async () => {
     label="Project"
     class="q-mb-sm"
     @filter="projectsFilterFn"
-    @update:model-value="fetchProjectTasks"
+    @update:model-value="updateProjectModel"
   >
     <template v-slot:prepend>
       <q-icon name="folder_copy" />
@@ -138,6 +152,7 @@ onMounted(async () => {
     label="Task"
     class="q-mb-sm"
     @filter="projectTasksFilterFn"
+    @update:model-value="updateProjectTaskModel"
   >
     <template v-slot:prepend>
       <q-icon name="format_list_bulleted" />

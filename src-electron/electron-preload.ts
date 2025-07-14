@@ -37,7 +37,10 @@ contextBridge.exposeInMainWorld('electronAPI', {
   getProjects: (): Promise<Project[]> => ipcRenderer.invoke('get-projects'),
   getProjectTasks: (projectId: string | number): Promise<ProjectTask[]> =>
     ipcRenderer.invoke('get-tasks-by-project', { projectId }),
-  getWeeklyTimesheets: (): Promise<ZohoTimesheet> => ipcRenderer.invoke('get-weekly-timesheet'),
+  getTimelogSummary: (): Promise<{
+    weeklyTimesheet: ZohoTimesheet;
+    dailyTimesheet: ZohoTimesheet;
+  }> => ipcRenderer.invoke('get-timelog-summary'),
 });
 
 contextBridge.exposeInMainWorld('authApi', {
