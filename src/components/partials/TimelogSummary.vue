@@ -1,17 +1,16 @@
 <script lang="ts" setup>
-import { computed, onMounted, ref } from 'vue';
+import { computed, onMounted } from 'vue';
 import LatestScreenshot from './LatestScreenshot.vue';
-import type { ZohoTimesheet } from 'src/types/zoho-rest.type';
+import { useTimetrackerStore } from 'src/stores/timetracker';
 
-const timelogSummary = ref<{
-  weeklyTimesheet: ZohoTimesheet;
-  dailyTimesheet: ZohoTimesheet;
-}>();
+const timetrackerStore = useTimetrackerStore();
 
-const weeklyHours = computed(() => timelogSummary.value?.weeklyTimesheet?.grandtotal || '00:00');
-const dailyHours = computed(() => timelogSummary.value?.dailyTimesheet?.grandtotal || '00:00');
-onMounted(async () => {
-  timelogSummary.value = await window.electronAPI.getTimelogSummary();
+const weeklyHours = computed(() => timetrackerStore.timelogSummary?.weekly?.grandtotal || '00:00');
+const dailyHours = computed(() => timetrackerStore.timelogSummary?.weekly?.grandtotal || '00:00');
+onMounted(() => {
+  timetrackerStore
+    .fetchTimelogSummary()
+    .catch(() => console.error('FE: Error on fetching timelog summary'));
 });
 </script>
 <template>

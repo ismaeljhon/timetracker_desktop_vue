@@ -1,5 +1,5 @@
 import type { CurrentUser } from 'app/src-electron/types/auth.type';
-import type { Project, ProjectTask, ZohoTimesheet } from './zoho-rest.type';
+import type { Project, ProjectTask, ZohoTimelogDTO, ZohoTimelogSummary } from './zoho-rest.type';
 
 export {};
 
@@ -10,10 +10,8 @@ declare global {
       getLatestScreenshot: () => Promise<string>;
       getProjects: () => Promise<Project[]>;
       getProjectTasks: (projectId: string | number) => Promise<ProjectTask[]>;
-      getTimelogSummary: () => Promise<{
-        weeklyTimesheet: ZohoTimesheet;
-        dailyTimesheet: ZohoTimesheet;
-      }>;
+      getTimelogSummary: () => Promise<ZohoTimelogSummary>;
+      addTimelogPerTask: (args: ZohoTimelogDTO) => Promise<[]>;
     };
     authApi: {
       getCurrentUser: () => Promise<CurrentUser>;

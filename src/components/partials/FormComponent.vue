@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import type { QSelect, QSelectProps } from 'quasar';
+import { type QSelect, type QSelectProps } from 'quasar';
 import { useTimetrackerStore } from 'src/stores/timetracker';
 import type { Project, ProjectTask } from 'src/types/zoho-rest.type';
 import type { Ref } from 'vue';
-import { computed, onMounted, ref, unref } from 'vue';
+import { computed, onMounted, ref, unref, watch } from 'vue';
 
 const timertrackerStore = useTimetrackerStore();
 const projectSelectedId = ref<number | string>();
@@ -110,6 +110,8 @@ const disableProjectTasksOptions = computed(() => {
 
   return false;
 });
+
+watch(notes, (val) => timertrackerStore.setNotes(val));
 
 onMounted(async () => {
   await fetchProjects();

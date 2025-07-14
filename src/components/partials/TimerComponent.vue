@@ -4,22 +4,49 @@ import { useTimetrackerStore } from 'src/stores/timetracker';
 import { computed } from 'vue';
 
 const timerStore = useTimerStore();
-const timertrackerStore = useTimetrackerStore();
+const timetrackerStore = useTimetrackerStore();
 
-const processTimer = () => {
+const processTimer = async () => {
   if (!timerStore.isTimerRunning) {
     timerStore.startTimer();
     return;
   }
 
-  console.log(timerStore.formattedTime);
+  const time = timerStore.formattedTime.split(':');
+  const hours = `${time[0]}:${time[1]}`;
+  const notes = timetrackerStore.notes;
+
+  const params = {
+    hours,
+    notes,
+  };
+
+  console.log({
+    projectId: timetrackerStore.projectSelectedId,
+    taskId: timetrackerStore.projectTaskSelectedId,
+    params,
+  });
+  const electronAPI = window.electronAPI;
+
+  await electronAPI
+    .addTimelogPerTask({
+      projectId: timetrackerStore.projectSelectedId,
+      taskId: timetrackerStore.projectTaskSelectedId,
+      params,
+    })
+    .catch(() => console.log('Error on FE timelog'));
+
   timerStore.stopTimer();
+
+  timetrackerStore
+    .fetchTimelogSummary()
+    .catch(() => console.error('FE: Error on fetching timelog summary'));
 };
 
 const timerButtonLabel = computed(() => (timerStore.isTimerRunning ? 'Stop' : 'Start'));
 const timerButtonIcon = computed(() => (timerStore.isTimerRunning ? 'stop' : 'play_arrow'));
 const disableTimer = computed(() => {
-  return !timertrackerStore.projectSelectedId || !timertrackerStore.projectTaskSelectedId;
+  return !timetrackerStore.projectSelectedId || !timetrackerStore.projectTaskSelectedId;
 });
 </script>
 <template>

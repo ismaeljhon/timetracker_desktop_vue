@@ -11,6 +11,7 @@ export default class {
 
     this.axiosInstance.interceptors.request.use((config: InternalAxiosRequestConfig) => {
       const accessToken = store.get('access_token');
+      console.log(accessToken);
       if (accessToken && config.headers) {
         config.headers.Authorization = `Bearer ${accessToken}`;
       }

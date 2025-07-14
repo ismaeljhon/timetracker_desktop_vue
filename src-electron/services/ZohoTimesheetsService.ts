@@ -1,6 +1,6 @@
 import type { ZohoTimesheet } from 'src/types/zoho-rest.type';
 import ZohoPortalService from './base/ZohoPortalsService';
-import { date } from 'quasar';
+import { getCurrentDateInUTC } from 'src/shared/utils';
 
 export default class ZohoTimesheetsService extends ZohoPortalService {
   constructor() {
@@ -13,7 +13,7 @@ export default class ZohoTimesheetsService extends ZohoPortalService {
         params: {
           users_list: '',
           view_type,
-          date: date.formatDate(Date.now(), 'MM-DD-YYYY'),
+          date: getCurrentDateInUTC(),
           bill_status: 'All',
           component_type: 'task',
         },

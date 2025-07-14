@@ -12,6 +12,7 @@ import type { CurrentUser } from './types/auth.type';
 
 import { config } from 'dotenv';
 import ZohoTimesheetsService from './services/ZohoTimesheetsService';
+import type { ZohoTimelogDTO } from 'src/types/zoho-rest.type';
 config();
 
 export const loadIpcHandlers = () => {
@@ -54,12 +55,20 @@ export const loadIpcHandlers = () => {
   });
 
   ipcMain.handle('get-timelog-summary', async () => {
-    const dailyTimesheet = await new ZohoTimesheetsService().getTimesheet('day');
-    const weeklyTimesheet = await new ZohoTimesheetsService().getTimesheet('week');
+    const daily = await new ZohoTimesheetsService().getTimesheet('day');
+    const weekly = await new ZohoTimesheetsService().getTimesheet('week');
 
     return {
-      dailyTimesheet,
-      weeklyTimesheet,
+      daily,
+      weekly,
     };
   });
+
+  ipcMain.handle(
+    'add-time-log-per-task',
+    async (event, args: { zohoTimelogDTO: ZohoTimelogDTO }) => {
+      const { projectId, taskId, params } = args.zohoTimelogDTO;
+      return new ZohoProjectTasksService(projectId).addTimelog({ taskId, params });
+    },
+  );
 };

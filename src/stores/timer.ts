@@ -35,7 +35,7 @@ export const useTimerStore = defineStore('timer', {
 
       this.screenshotInterval = window.setInterval(() => {
         screenshot.takeScreenshot().catch((e) => console.log(e));
-      }, 3000);
+      }, 1000000);
     },
     stopTimer() {
       if (this.timerId !== null) {
