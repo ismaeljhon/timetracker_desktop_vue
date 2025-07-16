@@ -1,10 +1,11 @@
 <script setup lang="ts">
 import { useTimerStore } from 'src/stores/timer';
 import { useTimetrackerStore } from 'src/stores/timetracker';
-import { computed } from 'vue';
+import { computed, ref } from 'vue';
 
 const timerStore = useTimerStore();
 const timetrackerStore = useTimetrackerStore();
+const isLoading = ref(false);
 
 const processTimer = async () => {
   if (!timerStore.isTimerRunning) {
@@ -21,20 +22,19 @@ const processTimer = async () => {
     notes,
   };
 
-  console.log({
-    projectId: timetrackerStore.projectSelectedId,
-    taskId: timetrackerStore.projectTaskSelectedId,
-    params,
-  });
   const electronAPI = window.electronAPI;
 
+  isLoading.value = true;
   await electronAPI
     .addTimelogPerTask({
       projectId: timetrackerStore.projectSelectedId,
       taskId: timetrackerStore.projectTaskSelectedId,
       params,
     })
-    .catch(() => console.log('Error on FE timelog'));
+    .catch(() => console.log('Error on FE timelog'))
+    .finally(() => {
+      isLoading.value = false;
+    });
 
   timerStore.stopTimer();
 
@@ -46,7 +46,11 @@ const processTimer = async () => {
 const timerButtonLabel = computed(() => (timerStore.isTimerRunning ? 'Stop' : 'Start'));
 const timerButtonIcon = computed(() => (timerStore.isTimerRunning ? 'stop' : 'play_arrow'));
 const disableTimer = computed(() => {
-  return !timetrackerStore.projectSelectedId || !timetrackerStore.projectTaskSelectedId;
+  return (
+    !timetrackerStore.projectSelectedId ||
+    !timetrackerStore.projectTaskSelectedId ||
+    isLoading.value
+  );
 });
 </script>
 <template>
@@ -68,6 +72,7 @@ const disableTimer = computed(() => {
             'lighter-button': timerStore.isTimerRunning,
           }"
           :disabled="disableTimer"
+          :loading="isLoading"
           @click="processTimer"
       /></q-item-label>
     </q-item-section>
