@@ -54,3 +54,8 @@ async function signOut() {
     </q-page-container>
   </q-layout>
 </template>
+<style>
+body {
+  overflow-y: hidden;
+}
+</style>
