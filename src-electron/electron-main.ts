@@ -20,6 +20,7 @@ async function createWindow() {
     width: 400,
     height: 600,
     useContentSize: true,
+    resizable: process.env.NODE_ENV !== 'production',
     webPreferences: {
       contextIsolation: true,
       nodeIntegration: false,
