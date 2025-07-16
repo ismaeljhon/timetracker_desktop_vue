@@ -6,20 +6,38 @@ import path from 'path';
 import Store from 'electron-store';
 import ZohoProjectsService from './services/ZohoProjectsService';
 import ZohoProjectTasksService from './services/ZohoProjectTasksService';
-import ZohoCatalystFilesService from './services/ZohoCatalystFilesService';
 import AuthKeyStorageService from './services/AuthKeyStorageService';
 import type { CurrentUser } from './types/auth.type';
 
 import { config } from 'dotenv';
 import ZohoTimesheetsService from './services/ZohoTimesheetsService';
-import type { ZohoTimelogDTO } from 'src/types/zoho-rest.type';
+import type { PortalUser, ZohoTimelogDTO } from 'src/types/zoho-rest.type';
+import ZohoPortalService from './services/base/ZohoPortalsService';
+import ZohoWorkdriveApiService from './services/ZohoWorkdriveApiService';
 config();
 
 export const loadIpcHandlers = () => {
   // load Authentication keys from HomePath here
   AuthKeyStorageService.setAuthKeys();
 
-  const store = new Store<{ latestScreenshot: string; currentUser: CurrentUser }>();
+  const store = new Store<{
+    latestScreenshot: string;
+    currentUser: CurrentUser;
+    portalUsers: PortalUser[];
+  }>();
+
+  ipcMain.handle('get-portal-users', async (event, args: { fetchFromApi?: boolean }) => {
+    console.log('args.fetchFromApi', args.fetchFromApi);
+    if (args.fetchFromApi) {
+      const portalUsers = await new ZohoPortalService()
+        .getUsers()
+        .catch(() => console.log('Error IPC: fetching portal users'));
+
+      store.set('portalUsers', portalUsers);
+    }
+
+    return store.get('portalUsers');
+  });
 
   ipcMain.handle('get-current-user', () => {
     return store.get('currentUser');
@@ -35,7 +53,7 @@ export const loadIpcHandlers = () => {
     await screenshot({ filename: imgPath });
     store.set('latestScreenshot', imgPath);
 
-    await new ZohoCatalystFilesService().uploadScreenshot();
+    await new ZohoWorkdriveApiService().uploadScreenshot();
 
     return imgPath;
   });
@@ -57,7 +75,6 @@ export const loadIpcHandlers = () => {
   ipcMain.handle('get-timelog-summary', async () => {
     const daily = await new ZohoTimesheetsService().getTimesheet('day');
     const weekly = await new ZohoTimesheetsService().getTimesheet('week');
-
     return {
       daily,
       weekly,
@@ -71,4 +88,15 @@ export const loadIpcHandlers = () => {
       return new ZohoProjectTasksService(projectId).addTimelog({ taskId, params });
     },
   );
+
+  ipcMain.handle('auth:isAuthenticated', () => {
+    const currentUser = store.get('currentUser');
+    return !!currentUser;
+  });
+  ipcMain.handle('auth:set-current-user', (event, args: { currentUser: PortalUser }) => {
+    store.set('currentUser', args.currentUser);
+  });
+  ipcMain.handle('auth:sign-out', () => {
+    store.delete('currentUser');
+  });
 };

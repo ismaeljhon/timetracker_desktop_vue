@@ -1,7 +1,15 @@
 <script setup lang="ts">
 import { useScreenshotStore } from 'src/stores/screenshot';
+import { useRouter } from 'vue-router';
 
 const screenshot = useScreenshotStore();
+
+const router = useRouter();
+async function signOut() {
+  window.authApi.signOut().catch((e) => console.log(e));
+
+  await router.push({ path: '/login' });
+}
 </script>
 
 <template>
@@ -28,7 +36,7 @@ const screenshot = useScreenshotStore();
               </q-item-section>
             </q-item> -->
             <q-separator spaced />
-            <q-item clickable v-close-popup tabindex="2">
+            <q-item clickable v-close-popup tabindex="2" @click="signOut">
               <q-item-section avatar>
                 <q-avatar icon="logout" square text-color="grey-7" size="40px" />
               </q-item-section>

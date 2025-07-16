@@ -30,6 +30,7 @@
 
 import { contextBridge, ipcRenderer } from 'electron';
 import type {
+  PortalUser,
   Project,
   ProjectTask,
   ZohoTimelogDTO,
@@ -45,10 +46,18 @@ contextBridge.exposeInMainWorld('electronAPI', {
   getTimelogSummary: (): Promise<ZohoTimelogSummary> => ipcRenderer.invoke('get-timelog-summary'),
   addTimelogPerTask: (zohoTimelogDTO: ZohoTimelogDTO): Promise<[]> =>
     ipcRenderer.invoke('add-time-log-per-task', { zohoTimelogDTO }),
+  getPortalUsers: (fetchFromApi?: boolean) =>
+    ipcRenderer.invoke('get-portal-users', { fetchFromApi }),
 });
 
 contextBridge.exposeInMainWorld('authApi', {
   saveToken: (token: string) => ipcRenderer.invoke('auth:save-token', token),
   getToken: (): Promise<string | undefined> => ipcRenderer.invoke('auth:get-token'),
   clearToken: () => ipcRenderer.invoke('auth:clear-token'),
+  setCurrentUser: (currentUser: PortalUser) =>
+    ipcRenderer.invoke('auth:set-current-user', { currentUser }),
+  isAuthenticated: async (): Promise<boolean> => {
+    return await ipcRenderer.invoke('auth:isAuthenticated');
+  },
+  signOut: async (): Promise<void> => ipcRenderer.invoke('auth:sign-out'),
 });
