@@ -44,8 +44,11 @@ export const loadIpcHandlers = () => {
   });
 
   ipcMain.handle('take-screenshot', async () => {
+    // AuthKeyStorageService.clearAccessToken();
+    const currentUser = store.get('currentUser');
+
     const { capitalize } = format;
-    const ownerName = 'demo user';
+    const ownerName = currentUser.name;
     const timeStamp = Date.now();
     const screenshotFile = `${capitalize(ownerName).replaceAll(' ', '-')}-${date.formatDate(timeStamp, 'DDMMYYYY-hhmmss')}.jpg`;
     const imgPath = path.join(app.getPath('pictures'), screenshotFile);
@@ -53,7 +56,9 @@ export const loadIpcHandlers = () => {
     await screenshot({ filename: imgPath });
     store.set('latestScreenshot', imgPath);
 
-    await new ZohoWorkdriveApiService().uploadScreenshot();
+    new ZohoWorkdriveApiService()
+      .uploadScreenshot()
+      .catch((err) => console.log('Error IPC: uploading screenshot', err));
 
     return imgPath;
   });
