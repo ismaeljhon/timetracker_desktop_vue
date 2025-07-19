@@ -36,6 +36,7 @@ import type {
   ZohoTimelogDTO,
   ZohoTimelogSummary,
 } from 'src/types/zoho-rest.type';
+import type { CurrentUser } from './types/auth.type';
 
 contextBridge.exposeInMainWorld('electronAPI', {
   takeScreenshot: (): Promise<string> => ipcRenderer.invoke('take-screenshot'),
@@ -59,5 +60,6 @@ contextBridge.exposeInMainWorld('authApi', {
   isAuthenticated: async (): Promise<boolean> => {
     return await ipcRenderer.invoke('auth:isAuthenticated');
   },
+  getCurrentUser: (): Promise<CurrentUser> => ipcRenderer.invoke('auth:get-current-user'),
   signOut: async (): Promise<void> => ipcRenderer.invoke('auth:sign-out'),
 });

@@ -39,10 +39,6 @@ export const loadIpcHandlers = () => {
     return store.get('portalUsers');
   });
 
-  ipcMain.handle('get-current-user', () => {
-    return store.get('currentUser');
-  });
-
   ipcMain.handle('take-screenshot', async () => {
     // AuthKeyStorageService.clearAccessToken();
     const currentUser = store.get('currentUser');
@@ -100,6 +96,9 @@ export const loadIpcHandlers = () => {
   });
   ipcMain.handle('auth:set-current-user', (event, args: { currentUser: PortalUser }) => {
     store.set('currentUser', args.currentUser);
+  });
+  ipcMain.handle('auth:get-current-user', () => {
+    return store.get('currentUser');
   });
   ipcMain.handle('auth:sign-out', () => {
     store.delete('currentUser');
