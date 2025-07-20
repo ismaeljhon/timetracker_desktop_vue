@@ -22,6 +22,16 @@ onMounted(async () => {
   <q-btn-dropdown stretch flat dropdown-icon="settings">
     <q-list>
       <q-item-label header>Howdy, {{ currentUser?.name }}</q-item-label>
+      <q-separator />
+      <q-item clickable v-close-popup tabindex="0" @click="router.go(0)">
+        <q-item-section avatar>
+          <q-avatar icon="cached" square text-color="grey-7" size="40px" />
+        </q-item-section>
+        <q-item-section>
+          <q-item-label>Refresh App</q-item-label>
+        </q-item-section>
+      </q-item>
+      <q-separator />
       <q-item clickable v-close-popup tabindex="0" @click="screenshot.takeScreenshot()">
         <q-item-section avatar>
           <q-avatar icon="screenshot_monitor" square text-color="grey-7" size="40px" />
@@ -30,7 +40,7 @@ onMounted(async () => {
           <q-item-label>Take screenshot</q-item-label>
         </q-item-section>
       </q-item>
-      <q-separator spaced />
+      <q-separator />
       <q-item clickable v-close-popup tabindex="2" @click="signOut">
         <q-item-section avatar>
           <q-avatar icon="logout" square text-color="grey-7" size="40px" />
