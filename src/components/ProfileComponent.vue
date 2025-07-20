@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { CurrentUser } from 'app/src-electron/types/auth.type';
+import type { CurrentUser } from 'app/src-electron/types/auth.type';
 import { useScreenshotStore } from 'src/stores/screenshot';
 import { onMounted, ref } from 'vue';
 import { useRouter } from 'vue-router';
