@@ -73,6 +73,13 @@ export const loadIpcHandlers = () => {
     return new ZohoProjectTasksService(args.projectId).getList();
   });
 
+  ipcMain.handle(
+    'get-subtasks',
+    (event, args: { projectId: number | string; taskId: number | string }) => {
+      return new ZohoProjectTasksService(args.projectId).getSubTasks(args.taskId);
+    },
+  );
+
   ipcMain.handle('get-timelog-summary', async () => {
     const daily = await new ZohoTimesheetsService().getTimesheet('day');
     const weekly = await new ZohoTimesheetsService().getTimesheet('week');

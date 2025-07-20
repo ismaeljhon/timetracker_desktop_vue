@@ -34,6 +34,7 @@ type ProjectTaskStatus = {
 export type ProjectTask = Omit<Project, 'status'> & {
   status: ProjectTaskStatus;
 };
+export type ProjectSubTask = ProjectTask;
 
 export type ZohoTimelogSummary = {
   daily: ZohoTimesheet;

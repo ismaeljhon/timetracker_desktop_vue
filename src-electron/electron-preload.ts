@@ -32,6 +32,7 @@ import { contextBridge, ipcRenderer } from 'electron';
 import type {
   PortalUser,
   Project,
+  ProjectSubTask,
   ProjectTask,
   ZohoTimelogDTO,
   ZohoTimelogSummary,
@@ -44,6 +45,8 @@ contextBridge.exposeInMainWorld('electronAPI', {
   getProjects: (): Promise<Project[]> => ipcRenderer.invoke('get-projects'),
   getProjectTasks: (projectId: string | number): Promise<ProjectTask[]> =>
     ipcRenderer.invoke('get-tasks-by-project', { projectId }),
+  getSubTasks: (projectId: string | number, taskId: string | number): Promise<ProjectSubTask[]> =>
+    ipcRenderer.invoke('get-subtasks', { projectId, taskId }),
   getTimelogSummary: (): Promise<ZohoTimelogSummary> => ipcRenderer.invoke('get-timelog-summary'),
   addTimelogPerTask: (zohoTimelogDTO: ZohoTimelogDTO): Promise<[]> =>
     ipcRenderer.invoke('add-time-log-per-task', { zohoTimelogDTO }),

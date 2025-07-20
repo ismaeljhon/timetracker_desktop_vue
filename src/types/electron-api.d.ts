@@ -2,6 +2,7 @@ import type { CurrentUser } from 'app/src-electron/types/auth.type';
 import type {
   PortalUser,
   Project,
+  ProjectSubTask,
   ProjectTask,
   ZohoTimelogDTO,
   ZohoTimelogSummary,
@@ -16,6 +17,10 @@ declare global {
       getLatestScreenshot: () => Promise<string>;
       getProjects: () => Promise<Project[]>;
       getProjectTasks: (projectId: string | number) => Promise<ProjectTask[]>;
+      getSubTasks: (
+        projectId: string | number,
+        taskId: string | number,
+      ) => Promise<ProjectSubTask[]>;
       getTimelogSummary: () => Promise<ZohoTimelogSummary>;
       addTimelogPerTask: (args: ZohoTimelogDTO) => Promise<[]>;
       getPortalUsers: ({ fetchFromApi: boolean }) => Promise<PortalUser[]>;

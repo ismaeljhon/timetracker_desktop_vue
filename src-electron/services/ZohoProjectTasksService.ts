@@ -1,4 +1,4 @@
-import type { ProjectTask, ZohoTimelogDTO } from 'src/types/zoho-rest.type';
+import type { ProjectSubTask, ProjectTask, ZohoTimelogDTO } from 'src/types/zoho-rest.type';
 import ZohoPortalRestApiService from './base/ZohoPortalsService';
 import queryString from 'querystring';
 
@@ -28,6 +28,13 @@ export default class ZohoProjectTasksService extends ZohoPortalRestApiService {
     return super
       .getInstance()
       .get(`/projects/${this.projectId}/tasks/?${queryString.stringify(params)}`)
+      .then((res) => res.data.tasks);
+  }
+
+  async getSubTasks(taskId: string | number): Promise<ProjectSubTask[]> {
+    return super
+      .getInstance()
+      .get(`/projects/${this.projectId}/tasks/${taskId}/subtasks/`)
       .then((res) => res.data.tasks);
   }
 
