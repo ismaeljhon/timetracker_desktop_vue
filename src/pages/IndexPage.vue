@@ -3,7 +3,7 @@
     <FormComponent />
     <TimerComponent />
     <TimelogSummary />
-    <p class="q-mt-sm text-center text-grey-6">Timezone: Edmonton, AB, Canada (GMT-7)</p>
+    <p class="q-mt-sm text-center text-grey-6">Timezone: (-06:00) Mountain Daylight Time</p>
   </q-page>
 </template>
 

@@ -4,7 +4,9 @@ import queryString from 'querystring';
 
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc.js';
+import Store from 'electron-store';
 import { getCurrentDateInUTC } from 'src/shared/utils';
+import type { CurrentUser } from '../types/auth.type';
 dayjs.extend(utc);
 
 export default class ZohoProjectTasksService extends ZohoPortalRestApiService {
@@ -15,9 +17,17 @@ export default class ZohoProjectTasksService extends ZohoPortalRestApiService {
   }
 
   async getList(): Promise<ProjectTask[]> {
+    const store = new Store<{ currentUser: CurrentUser }>();
+    const currentUser = store.get('currentUser');
+    const owner = currentUser.id;
+
+    const params = {
+      owner,
+    };
+
     return super
       .getInstance()
-      .get(`/projects/${this.projectId}/tasks/`)
+      .get(`/projects/${this.projectId}/tasks/?${queryString.stringify(params)}`)
       .then((res) => res.data.tasks);
   }
 
