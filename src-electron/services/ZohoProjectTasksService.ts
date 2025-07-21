@@ -11,6 +11,7 @@ dayjs.extend(utc);
 
 export default class ZohoProjectTasksService extends ZohoPortalRestApiService {
   private projectId: string | number;
+  private allowedStatus = ['Open', 'In Progress', 'Waiting for Client'];
   constructor(projectId: string | number) {
     super();
     this.projectId = projectId;
@@ -28,14 +29,20 @@ export default class ZohoProjectTasksService extends ZohoPortalRestApiService {
     return super
       .getInstance()
       .get(`/projects/${this.projectId}/tasks/?${queryString.stringify(params)}`)
-      .then((res) => res.data.tasks);
+      .then((res) =>
+        res.data.tasks.filter((task: ProjectTask) => this.allowedStatus.includes(task.status.name)),
+      );
   }
 
   async getSubTasks(taskId: string | number): Promise<ProjectSubTask[]> {
     return super
       .getInstance()
       .get(`/projects/${this.projectId}/tasks/${taskId}/subtasks/`)
-      .then((res) => res.data.tasks);
+      .then((res) =>
+        res.data.tasks.filter((subTask: ProjectSubTask) =>
+          this.allowedStatus.includes(subTask.status.name),
+        ),
+      );
   }
 
   async addTimelog(args: Omit<ZohoTimelogDTO, 'projectId'>) {
