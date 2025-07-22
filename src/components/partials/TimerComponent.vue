@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { useTimerStore } from 'src/stores/timer';
+import { useTimerStore } from 'src/stores/v2/timer';
 import { useTimetrackerStore } from 'src/stores/timetracker';
 import { computed, ref } from 'vue';
 
@@ -25,6 +25,9 @@ const processTimer = async () => {
   const electronAPI = window.electronAPI;
 
   isLoading.value = true;
+
+  timerStore.stopTimer();
+
   await electronAPI
     .addTimelogPerTask({
       projectId: timetrackerStore.projectSelectedId,
@@ -35,8 +38,6 @@ const processTimer = async () => {
     .finally(() => {
       isLoading.value = false;
     });
-
-  timerStore.stopTimer();
 
   timetrackerStore
     .fetchTimelogSummary()
