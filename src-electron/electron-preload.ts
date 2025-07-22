@@ -28,8 +28,41 @@
  * }
  */
 
-import { contextBridge, ipcRenderer } from 'electron'
+import { contextBridge, ipcRenderer } from 'electron';
+import type {
+  PortalUser,
+  Project,
+  ProjectSubTask,
+  ProjectTask,
+  ZohoTimelogDTO,
+  ZohoTimelogSummary,
+} from 'src/types/zoho-rest.type';
+import type { CurrentUser } from './types/auth.type';
 
 contextBridge.exposeInMainWorld('electronAPI', {
-  takeScreenshot: (): Promise<string> => ipcRenderer.invoke('take-screenshot')
-})
+  takeScreenshot: (): Promise<string> => ipcRenderer.invoke('take-screenshot'),
+  getLatestScreenshot: (): Promise<string> => ipcRenderer.invoke('get-latest-screenshot'),
+  getProjects: (): Promise<Project[]> => ipcRenderer.invoke('get-projects'),
+  getProjectTasks: (projectId: string | number): Promise<ProjectTask[]> =>
+    ipcRenderer.invoke('get-tasks-by-project', { projectId }),
+  getSubTasks: (projectId: string | number, taskId: string | number): Promise<ProjectSubTask[]> =>
+    ipcRenderer.invoke('get-subtasks', { projectId, taskId }),
+  getTimelogSummary: (): Promise<ZohoTimelogSummary> => ipcRenderer.invoke('get-timelog-summary'),
+  addTimelogPerTask: (zohoTimelogDTO: ZohoTimelogDTO): Promise<[]> =>
+    ipcRenderer.invoke('add-time-log-per-task', { zohoTimelogDTO }),
+  getPortalUsers: (fetchFromApi?: boolean) =>
+    ipcRenderer.invoke('get-portal-users', { fetchFromApi }),
+});
+
+contextBridge.exposeInMainWorld('authApi', {
+  saveToken: (token: string) => ipcRenderer.invoke('auth:save-token', token),
+  getToken: (): Promise<string | undefined> => ipcRenderer.invoke('auth:get-token'),
+  clearToken: () => ipcRenderer.invoke('auth:clear-token'),
+  setCurrentUser: (currentUser: PortalUser) =>
+    ipcRenderer.invoke('auth:set-current-user', { currentUser }),
+  isAuthenticated: async (): Promise<boolean> => {
+    return await ipcRenderer.invoke('auth:isAuthenticated');
+  },
+  getCurrentUser: (): Promise<CurrentUser> => ipcRenderer.invoke('auth:get-current-user'),
+  signOut: async (): Promise<void> => ipcRenderer.invoke('auth:sign-out'),
+});
